@@ -1,0 +1,40 @@
+# Django-specific files
+*.sqlite3
+*.db
+db.sqlite3
+local_settings.py
+*__init__.py
+migrations/
+env/
+# Python files
+*.pyc
+*.pyo
+__pycache__/
+.pytest_cache/
+
+# Test files
+*.py[di]
+*.egg-*
+.eggs/
+pip-egg-info/
+
+# IDE files
+.idea/
+*.iml
+.vscode/
+
+# Logs and other non-code files
+logs/
+*.log
+*.out
+
+# Build files
+build/
+dist/
+
+# Unnecessary files
+*.pyc
+*.pyo
+__pycache__/
+*~
+*.DS_Store

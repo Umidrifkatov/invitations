@@ -1,0 +1,216 @@
+:root {
+    --tg-theme-bg-color: var(--tg-theme-bg-color, #fff);
+    --tg-theme-text-color: var(--tg-theme-text-color, #000);
+    --tg-theme-button-color: var(--tg-theme-button-color, #2481cc);
+    --tg-theme-button-text-color: var(--tg-theme-button-text-color, #fff);
+    --tg-theme-secondary-bg-color: var(--tg-theme-secondary-bg-color, #585858);
+}
+
+body {
+    background-color: var(--tg-theme-bg-color);
+    color: var(--tg-theme-text-color);
+    padding-bottom: 80px;
+}
+
+.tg-input:focus {
+    background-color: var(--tg-theme-secondary-bg-color, rgba(0, 0, 0, 0.05));
+    box-shadow: none;
+    border: 1px solid var(--tg-theme-button-color, #2481cc);
+    outline: none;
+    color: var(--tg-theme-text-color);;
+}
+
+.tg-input::placeholder {
+    color: var(--tg-theme-hint-color, #999);
+}
+
+
+.text-muted{
+    color: var(--tg-theme-hint-color)!important;
+}
+
+
+/* Для группы input с кнопкой */
+.input-group .tg-input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group .tg-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+
+
+.tg-input {
+    background-color: var(--tg-theme-secondary-bg-color, rgba(0, 0, 0, 0.05));
+    color: var(--tg-theme-text-color, #000);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+}
+
+
+.tg-button {
+    background-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    width: 100%;
+}
+
+.basictext {
+    color: var(--tg-theme-text-color);
+}
+
+
+.event-card {
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    background-color: var(--tg-theme-bg-color);
+}
+
+.event-card:hover {
+    /* transform: translateY(-1px); */
+    border-color: var(--tg-theme-button-color);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.event-card h3 {
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.event-card p {
+    font-size: 0.875rem;
+    margin-bottom: 4px;
+}
+
+.event-card .badge {
+    padding: 6px 10px;
+    border-radius: 12px;
+    font-weight: normal;
+}
+
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+.nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--tg-theme-bg-color);
+    border-top: 1px solid var(--tg-theme-secondary-bg-color);
+    padding: 12px;
+    display: flex;
+    justify-content: space-around;
+    z-index: 1000;
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--tg-theme-text-color);
+    text-decoration: none;
+    font-size: 12px;
+    opacity: 0.7;
+    transition: opacity 0.2s, color 0.2s;
+}
+
+.nav-item.active {
+    opacity: 1;
+    color: var(--tg-theme-button-color);
+}
+
+.nav-item i {
+    font-size: 24px;
+    margin-bottom: 4px;
+}
+
+.badge.pending { background-color: #ffd700; }
+.badge.accepted { background-color: #90EE90; }
+.badge.declined { background-color: #ffcccb; }
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.loading::after {
+    content: "";
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--tg-theme-button-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+.form-check-input:checked {
+    background-color: var(--tg-theme-button-color);
+    border-color: var(--tg-theme-button-color);
+}
+
+.btn-outline-primary {
+    color: var(--tg-theme-button-color);
+    border-color: var(--tg-theme-button-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--tg-theme-button-color);
+    border-color: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+}
+
+
+.list-group-item {
+    background: var(--tg-theme-bg-color);
+    border-color: rgba(0,0,0,0.2);
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+.list-group-item h6 {
+    color: var(--tg-theme-text-color);
+    font-weight: 500;
+}
+
+.list-group-item small {
+    color: var(--tg-theme-hint-color);
+}
+
+.form-switch .form-check-input {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='rgba%28255, 255, 255, 1%29'/%3e%3c/svg%3e");
+}
+
+.guest-form .input-group .tg-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    padding: 8px 16px;
+}
+
+.guest-form .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}

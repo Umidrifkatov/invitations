@@ -1,0 +1,15 @@
+
+<nav class="nav-bottom">
+    <a href="#" class="nav-item {% if active_view == 'events' %}active{% endif %}" onclick="showView('eventsView')">
+        <i class="bi bi-calendar-event"></i>
+        <span>Мероприятия</span>
+    </a>
+    <a href="#" class="nav-item {% if active_view == 'create' %}active{% endif %}" onclick="showView('createView')">
+        <i class="bi bi-plus-circle"></i>
+        <span>Создать</span>
+    </a>
+    <a href="#" class="nav-item {% if active_view == 'settings' %}active{% endif %}" onclick="showView('settingsView')">
+        <i class="bi bi-gear"></i>
+        <span>Настройки</span>
+    </a>
+</nav>

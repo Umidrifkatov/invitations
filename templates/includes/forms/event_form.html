@@ -1,0 +1,30 @@
+
+<form id="createEventForm" onsubmit="return handleCreateEvent(event)">
+    <div class="mb-3">
+        
+        <input name="title" type="text" class="form-control tg-input" placeholder="Название" required>
+        <span class="text-muted mx-2"><small>Для внутреннего использования</small> </span>
+        
+    </div>
+
+    <div class="mb-3">
+        
+        <input name="date" type="datetime-local" class="form-control tg-input" placeholder="Дата и время" required>
+        <span class="text-muted mx-2"><small>Дата и время</small> </span>
+    </div>
+
+    <div class="mb-3">
+        
+        <input name="location" type="text" class="form-control tg-input" placeholder="Адрес" required>
+        <span class="text-muted mx-2"><small>Укажите точный адрес и ориентир</small> </span>
+    </div>
+
+    <div class="mb-3">
+        <textarea name="description" class="form-control tg-input" placeholder="Напишите текст пригласительного письма" rows="4"></textarea>
+        <span class="text-muted mx-2"><small>Максимум 500 символов</small> </span>
+    </div>
+
+    <button type="submit" class="tg-button" id="submitButton">
+        Создать
+    </button>
+</form>
