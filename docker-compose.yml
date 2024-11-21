@@ -7,8 +7,12 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - static_volume:/app/static
+      - .:/app
+      - static_volume:/app/staticfiles
       - media_volume:/app/media
+    environment:
+      - PYTHONUNBUFFERED=1
+      - DJANGO_SETTINGS_MODULE=core.settings  # Укажите правильный путь к settings
 
 volumes:
   static_volume:
