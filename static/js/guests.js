@@ -179,7 +179,6 @@ async function copyInviteLink(token, guestName) {
         // Создаем текст сообщения в HTML формате для Telegram
         const messageText = `Hurmatli ${guestName}!
 
-Sizni Otabek va Zinnuraning nikoh to'yiga taklif etamiz.
 
 Taklifnoma:
 ${inviteLink}`;
