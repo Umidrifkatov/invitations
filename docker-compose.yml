@@ -1,5 +1,7 @@
 version: '3.8'
 
+version: '3.8'
+
 services:
   web:
     build: .
@@ -12,30 +14,9 @@ services:
       - media:/app/media
     environment:
       - PYTHONUNBUFFERED=1
-
-
-  # db:
-  #   image: postgres:15
-  #   restart: always
-  #   environment:
-  #     POSTGRES_DB: your_db_name
-  #     POSTGRES_USER: your_db_user
-  #     POSTGRES_PASSWORD: your_db_password
-  #   volumes:
-  #     - postgres_data:/var/lib/postgresql/data
-
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-    volumes:
-      - ./nginx:/etc/nginx/conf.d
-      - staticfiles:/app/staticfiles
-      - media:/app/media
     depends_on:
-      - web
+      - db  # Уберите эту строку, если больше не используете db
 
 volumes:
   staticfiles:
   media:
-  # postgres_data:
