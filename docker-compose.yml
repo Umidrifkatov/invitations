@@ -14,8 +14,7 @@ services:
       - media:/app/media
     environment:
       - PYTHONUNBUFFERED=1
-    depends_on:
-      - db  # Уберите эту строку, если больше не используете db
+
 
 volumes:
   staticfiles:
