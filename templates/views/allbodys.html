@@ -1,28 +1,30 @@
+<div id="detailsView" class="view">
+    <div id="eventDetails"></div>
+</div>
 
-
-<div id="createView" class="view">
-    <h2 class="h4 mb-4">Создать мероприятие</h2>
+<div id="createView" class="view active">
+    <h2 class="h4 mb-4">Новое мероприятие</h2>
     {% include 'includes/forms/event_form.html' %}
 </div>
 
 
 
 
-<div id="detailsView" class="view">
-    <div id="eventDetails"></div>
+<div id="detailsView1" class="view">
+    <div id="eventDetails1"></div>
 </div>
 
 
 
 
-<div id="eventsView" class="view active">
+<div id="eventsView" class="view">
     <div id="eventsList"></div>
 </div>
 
 
 
 
-<div id="settingsView" class="view">
+<div id="settingsView inactive"  class="view">
     <h2 class="h4 mb-4">Settings</h2>
     {% include 'includes/settings_list.html' %}
 </div>

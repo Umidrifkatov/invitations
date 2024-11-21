@@ -1,28 +1,106 @@
 
 <form id="createEventForm" onsubmit="return handleCreateEvent(event)">
     <div class="mb-3">
-        
         <input name="title" type="text" class="form-control tg-input" placeholder="Название" required>
-        <span class="text-muted mx-2"><small>Для внутреннего использования</small> </span>
-        
+        <span class="text-muted mx-2"><small>Для внутреннего использования</small></span>
     </div>
 
+   
+
+   
+
+    <!-- Остальные поля формы -->
     <div class="mb-3">
-        
         <input name="date" type="datetime-local" class="form-control tg-input" placeholder="Дата и время" required>
-        <span class="text-muted mx-2"><small>Дата и время</small> </span>
+        <span class="text-muted mx-2"><small>Дата и время</small></span>
     </div>
 
     <div class="mb-3">
-        
         <input name="location" type="text" class="form-control tg-input" placeholder="Адрес" required>
-        <span class="text-muted mx-2"><small>Укажите точный адрес и ориентир</small> </span>
+        <span class="text-muted mx-2"><small>Укажите точный адрес и ориентир</small></span>
+    </div>
+
+    <div class="mb-3">
+        <input name="map_link" type="text" class="form-control tg-input" placeholder="Координаты">
+        <span class="text-muted mx-2">
+            <small>Введите через запятую прим.: 41.302789, 69.226394</small>
+        </span>
     </div>
 
     <div class="mb-3">
         <textarea name="description" class="form-control tg-input" placeholder="Напишите текст пригласительного письма" rows="4"></textarea>
-        <span class="text-muted mx-2"><small>Максимум 500 символов</small> </span>
+        <span class="text-muted mx-2"><small>Макс. 500 символов</small></span>
     </div>
+
+
+     <!-- Переключатель для изображения -->
+     <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background: var(--tg-theme-secondary-bg-color);">
+            <div>
+                <h6 class="mb-0 basictext">Добавить изображение</h6>
+                <small class="text-muted">Загрузить фоновое изображение для пригласительного</small>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="imageToggle">
+            </div>
+        </div>
+        <!-- Обновленное поле для загрузки изображения -->
+        <div id="imageUploadBlock" style="display: none;" class="mt-2">
+            <label for="imageInput" class="custom-file-upload">
+                <input type="file" 
+                       name="image" 
+                       id="imageInput" 
+                       class="d-none" 
+                       accept="image/*">
+                <span class="btn w-100 custom-upload-btn">
+                    <i class="bi bi-image me-2"></i>Выбрать изображение
+                </span>
+            </label>
+            <small class="file-name text-muted mt-1 d-block"></small>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Переключатель для указания стола -->
+    <div class="mb-3">
+        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background: var(--tg-theme-secondary-bg-color);">
+            <div>
+                <h6 class="mb-0 basictext">С номером стола</h6>
+                <small class="text-muted">Указывать стол для гостя</small>
+            </div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="tableToggle">
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="mb-3">
+        <label class="text-muted mb-2"><small>Цветовая схема приглашения</small></label>
+        <div class="color-scheme-selector">
+            <div class="scheme-option" data-scheme="classic">
+                <div class="scheme-preview classic"></div>
+                <span class="scheme-name">Классическая</span>
+            </div>
+            <div class="scheme-option" data-scheme="elegant">
+                <div class="scheme-preview elegant"></div>
+                <span class="scheme-name">Элегантная</span>
+            </div>
+            <div class="scheme-option" data-scheme="modern">
+                <div class="scheme-preview modern"></div>
+                <span class="scheme-name">Современная</span>
+            </div>
+        </div>
+        <input type="hidden" name="color_scheme" id="colorScheme">
+    </div>
+
+
+
+
 
     <button type="submit" class="tg-button" id="submitButton">
         Создать

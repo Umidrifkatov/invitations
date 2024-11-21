@@ -13,15 +13,9 @@ urlpatterns = [
     
     # Web App entry point
     path('', TemplateView.as_view(template_name='base.html'), name='webapp'),
-]
+    
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Serve media files in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    
-    # Add debug toolbar URLs in development
-    try:
-        import debug_toolbar
-        urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]
-    except ImportError:
-        pass

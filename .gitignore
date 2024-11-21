@@ -12,6 +12,9 @@ env/
 __pycache__/
 .pytest_cache/
 
+
+media/
+
 # Test files
 *.py[di]
 *.egg-*

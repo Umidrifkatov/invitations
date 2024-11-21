@@ -18,7 +18,7 @@ async function loadGuests(eventId) {
         console.log('Loaded guests:', guests); // Для отладки
         
         // Обновляем секцию с гостями
-        const $guestSection = $('#eventDetails .addguestform');
+        const $guestSection = $('#eventDetails1 .addguestform');
         $guestSection.html(`
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h4 class="h5 mb-0">Количество гостей (${guests.length})</h4>
@@ -30,7 +30,7 @@ async function loadGuests(eventId) {
         `);
     } catch (error) {
         console.error('Error loading guests:', error);
-        const $guestSection = $('#eventDetails .addguestform');
+        const $guestSection = $('#eventDetails1 .addguestform');
         $guestSection.html(`
             <div class="alert alert-danger">
                 Failed to load guests. <button onclick="loadGuests(${eventId})" class="btn btn-sm btn-link">Try again</button>
@@ -68,7 +68,7 @@ async function deleteGuest(guestId, e) {
 // Функция получения текущего eventId
 function getCurrentEventId() {
     // Можно хранить в data-атрибуте на странице или в URL
-    return $('#eventDetails').data('event-id');
+    return $('#eventDetails1').data('event-id');
 }
 
 
@@ -76,24 +76,22 @@ function renderGuests(guests) {
     if (!guests || guests.length === 0) {
         return '<p class="mx-auto">Нет добавленных гостей</p>';
     }
-
+ 
     return `
         <div class="list-group mt-3">
             ${guests.map(guest => `
                 <div class="list-group-item d-flex justify-content-between align-items-center">
                     <div>
                         <h4 class="basictext">${escapeHtml(guest.name)}</h4>
-                        
-                        <small class="">Добавлено: ${formatDate(guest.created_at)}</small>    
-                        
+                        <small class="">Добавлен(а): ${formatDate(guest.created_at)}</small>    
                     </div>
                     <div class="d-flex gap-2">
                         <button 
-                            onclick="copyGuest('${escapeHtml(guest.name)}')" 
+                            onclick="copyInviteLink('${guest.invite_token}', '${escapeHtml(guest.name)}')"
                             class="btn btn-sm btn-outline-secondary"
-                            title="Копировать имя"
+                            title="Копировать приглашение"
                         >
-                            <i class="bi bi-clipboard"></i>
+                            <i class="bi bi-share"></i>
                         </button>
                         <button 
                             onclick="deleteGuest(${guest.id}, event)" 
@@ -107,24 +105,8 @@ function renderGuests(guests) {
             `).join('')}
         </div>
     `;
-}
+ }
 
-// Функция для копирования имени гостя
-async function copyGuest(name) {
-    try {
-        await navigator.clipboard.writeText(name);
-        tg.showPopup({
-            message: 'Имя скопировано',
-            buttons: [{ type: 'ok' }]
-        });
-    } catch (err) {
-        console.error('Failed to copy:', err);
-        tg.showPopup({
-            message: 'Не удалось скопировать имя',
-            buttons: [{ type: 'ok' }]
-        });
-    }
-}
 
 
 
@@ -134,13 +116,13 @@ function addGuest(eventId) {
         <div class="guest-form mt-2 mb-3">
             <div class="input-group">
                 <input type="text" class="form-control tg-input" placeholder="Имя гостя" id="guestName">
-                <button class="tg-button" type="button" style="width: auto;" id="addGuestBtn">+</button>
+                <button class="tg-button" type="button" style="width: auto;" id="addGuestBtn">Добавить</button>
             </div>
         </div>
     `;
 
     // Добавляем форму и настраиваем обработчики
-    const $guestSection = $('#eventDetails .addguestform');
+    const $guestSection = $('#eventDetails1 .addguestform');
     $guestSection.find('.tg-button').last().hide(); // Скрываем только кнопку "Add Guest"
     $guestSection.append(formHtml);
 
@@ -187,3 +169,155 @@ function addGuest(eventId) {
 
     $('#guestName').focus();
 }
+
+
+async function copyInviteLink(token, guestName) {
+    try {
+        const botUsername = 'Taklif96bot';
+        const inviteLink = `https://t.me/${botUsername}?startapp=invite_${token}`;
+        
+        // Создаем текст сообщения в HTML формате для Telegram
+        const messageText = `Hurmatli ${guestName}!
+
+Sizni Otabek va Zinnuraning nikoh to'yiga taklif etamiz.
+
+Taklifnoma:
+${inviteLink}`;
+        
+        // Копируем текст
+        await navigator.clipboard.writeText(messageText);
+          
+    } catch (err) {
+        console.error('Failed to copy:', err);
+    }
+ }
+
+
+
+// Обновленная функция отображения приглашения
+function showInvitation(invitation) {
+    showView('detailsView');
+    const $details = $('#eventDetails');
+    
+    let mapLinkHtml = '';
+    if (invitation.event.map_link) {
+        const [lat, lon] = invitation.event.map_link.split(',').map(coord => coord.trim());
+        const yandexMapUrl = `https://yandex.ru/maps/?pt=${lon},${lat}&z=17&l=map`;
+        mapLinkHtml = `
+            <p class="mb-2">
+                <a href="${yandexMapUrl}" target="_blank" class="btn-outline-primary text-decoration-none">
+                    <strong><i class="bi bi-geo-alt"></i> Xaritada ko\'rish </strong>
+                </a>
+            </p>`;
+    }
+
+    // Получаем выбранный стиль из данных приглашения
+    const style = invitation.event.color_scheme || 'classic';
+    
+    // Применяем соответствующий шаблон
+    $details.html(invitationTemplates[style](invitation, mapLinkHtml));
+    
+    // Добавляем класс стиля к контейнеру
+    $details.removeClass('classic elegant modern').addClass(style);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        const invitationTemplates = {
+            classic: function (invitation, mapLinkHtml) {
+                // Hide navigation
+                $('.nav-bottom').hide();
+                // Remove classes and styles from #app, keeping only max-width
+                $('#app').removeClass();
+                $('#app').removeAttr('style');
+        
+                const backgroundStyle = invitation.event.background_image_url
+                    ? `background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${invitation.event.background_image_url}');
+                       background-size: cover;
+                       background-position: center;
+                       background-attachment: fixed;
+                       min-height: 100vh;`
+                    : '';
+        
+                const textShadowStyle = `text-shadow: 1px 1px 1px rgba(255,255,255,0.5);`;
+        
+                const formattedDate = formatDateUz(invitation.event.date);
+        
+                return `
+                    <div style="${backgroundStyle}" class="px-4">
+                        <div class="text-center pt-5">
+                            <div class="mb-4 pt-5">
+                                <div class="mb-3" style="font-size: 1.5rem; color: white; ${textShadowStyle}">
+                                    Qadrli ${escapeHtml(invitation.guest.name)}
+                                </div>
+                                ${
+                                    invitation.event.description
+                                        ? `<div class="mb-4" style="font-size: 1.3rem; color: white; ${textShadowStyle}">
+                                            ${escapeHtml(invitation.event.description)}
+                                        </div>`
+                                        : ''
+                                }
+                            </div>
+                            
+                            <div class="mx-auto pt-5" style="max-width: 600px">
+                                <div class="row mb-5">
+                                    <div class="col-6">
+                                        <p class="mb-4">
+                                            <i class="bi bi-calendar-event h4 mb-2" style="color: white; ${textShadowStyle}"></i><br>
+                                            <strong style="color: white; font-size: 1.3rem; ${textShadowStyle}">Vaqt</strong><br>
+                                            <span style="font-size: 1.2rem; color: white; ${textShadowStyle}">
+                                                ${formattedDate}
+                                            </span>
+                                        </p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="mb-4">
+                                            <i class="bi bi-geo-alt h4 mb-2" style="color: white; ${textShadowStyle}"></i><br>
+                                            <strong style="color: white; font-size: 1.3rem; ${textShadowStyle}">Manzil</strong><br>
+                                            <span style="font-size: 1.2rem; color: white; ${textShadowStyle}">
+                                                ${escapeHtml(invitation.event.location)}
+                                            </span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-4 text-center ">
+                                    <a class="btn btn-outline-light btn-lg w-100" href="${invitation.event.map_link}" target="_blank">
+                                        <i class="bi bi-geo-alt"></i> Xaritada manzilni ko‘rish
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> 
+                `;
+            }
+        };
+        
+        // Helper function for formatting date to Uzbek style
+        function formatDateUz(date) {
+            const options = { day: 'numeric', month: 'long', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+            const uzDate = new Date(date).toLocaleDateString('uz-UZ', options);
+            return uzDate.replace(',', '').replace(' soat', ' soat') + ' da';
+        }
+        

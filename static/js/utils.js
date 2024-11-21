@@ -15,13 +15,7 @@ function formatDate(dateString) {
     }
 }
 
-function getStatusClass(status) {
-    return {
-        'PENDING': 'bg-warning',
-        'ACCEPTED': 'bg-success',
-        'DECLINED': 'bg-danger'
-    }[status] || 'bg-secondary';
-}
+
 
 function truncateText(text, maxLength) {
     if (!text) return '';

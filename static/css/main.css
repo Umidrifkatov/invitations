@@ -12,6 +12,12 @@ body {
     padding-bottom: 80px;
 }
 
+
+a{
+    color: var(--tg-theme-button-color);
+}
+
+
 .tg-input:focus {
     background-color: var(--tg-theme-secondary-bg-color, rgba(0, 0, 0, 0.05));
     box-shadow: none;
@@ -213,4 +219,106 @@ body {
 .guest-form .form-control {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
+}
+
+
+
+.color-scheme-selector {
+    display: flex;
+    gap: 15px;
+    padding: 10px 0;
+}
+
+.scheme-option {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.scheme-option:hover {
+    background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.scheme-option.active {
+    background-color: var(--tg-theme-secondary-bg-color);
+}
+
+.scheme-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.scheme-option.active .scheme-preview {
+    border-color: var(--tg-theme-button-color);
+}
+
+/* Цвета для превью схем */
+.scheme-preview.classic {
+    background: linear-gradient(45deg, #d7d6d1, #b8b6a9);
+}
+
+.scheme-preview.elegant {
+    background: linear-gradient(45deg, #1e3e5d, #1e3852);
+}
+
+.scheme-preview.modern {
+    background: linear-gradient(45deg, #1d1d1d, #151515);
+}
+
+.scheme-name {
+    font-size: 12px;
+    color: var(--tg-theme-text-color);
+}
+
+
+
+.custom-file-upload {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+
+.custom-upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--tg-theme-button-color);
+    color: var(--tg-theme-button-color);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.custom-upload-btn:hover {
+    background: var(--tg-theme-button-color);
+    color: var(--tg-theme-button-text-color);
+}
+
+/* Стиль для отображения имени файла */
+.file-name {
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+
+
+#eventDetails {
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+
+
+#app {
+    max-width: 600px;
 }

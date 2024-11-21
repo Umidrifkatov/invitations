@@ -29,9 +29,9 @@ async function loadEvents() {
         if (events.length === 0) {
             $eventsList.html(`
                 <div class="text-center py-4">
-                    <p class="text-muted">No events yet</p>
+                    <p class="text-muted">Нет мероприятий</p>
                     <button onclick="showView('createView')" class="tg-button">
-                        Create Your First Event
+                        Создать
                     </button>
                 </div>
             `);
@@ -78,73 +78,121 @@ async function loadEvents() {
     }
 }
 
-// Обработка создания нового события
+
+
+
+
+
+
+
+
+
+
 async function handleCreateEvent(event) {
     event.preventDefault();
     const $form = $('#createEventForm');
     const $submitBtn = $('#submitButton');
     
     try {
-        // Блокируем кнопку отправки и показываем спиннер
+        // Валидация координат
+        const mapLink = $form.find('[name="map_link"]').val().trim();
+        if (mapLink) {
+            const coords = mapLink.split(',').map(coord => parseFloat(coord.trim()));
+            
+            if (coords.length !== 2 || 
+                isNaN(coords[0]) || 
+                isNaN(coords[1]) || 
+                coords[0] < -90 || 
+                coords[0] > 90 || 
+                coords[1] < -180 || 
+                coords[1] > 180) {
+                
+                tg.showPopup({
+                    title: 'Ошибка',
+                    message: 'Введите координаты в формате: 41.302789, 69.226394',
+                    buttons: [{ type: 'ok' }]
+                });
+                return false;
+            }
+        }
+        
         $submitBtn.prop('disabled', true).html(
-            '<span class="spinner-border spinner-border-sm me-2"></span>Creating...'
+            '<span class="spinner-border spinner-border-sm me-2"></span>Создание...'
         );
         
-        // Собираем данные формы
         const formData = new FormData($form[0]);
-        const jsonData = Object.fromEntries(formData.entries());
         
-        // Отправляем запрос на создание события
-        const response = await fetch('/api/events/', {
-            method: 'POST',
-            headers: {
-                'X-Telegram-Init-Data': tg.initData,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(jsonData)
-        });
+        // Добавляем значения переключателей
+        formData.append('has_table', $('#tableToggle').is(':checked'));
+        
+        // Если файл не выбран или переключатель выключен, удаляем поле файла
+        if (!$('#imageToggle').is(':checked')) {
+            formData.delete('background_image');
+        }
+
+        // Если координаты введены, форматируем их
+        if (formData.get('map_link')) {
+            const [lat, lon] = formData.get('map_link').split(',').map(coord => parseFloat(coord.trim()));
+            formData.set('map_link', `${lat}, ${lon}`);
+        }
+        
+    
+    
+    // Проверяем файл и переключатель
+    const imageFile = $('#imageInput')[0].files[0];
+    if ($('#imageToggle').is(':checked') && imageFile) {
+        formData.set('background_image', imageFile);
+    } else {
+        formData.delete('background_image');
+    }
+    
+    // Отправка без Content-Type
+    const response = await fetch('/api/events/', {
+        method: 'POST',
+        headers: {
+            'X-Telegram-Init-Data': tg.initData
+        },
+        body: formData
+    });
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to create event');
+            throw new Error(errorData.error || 'Не удалось создать событие');
         }
         
-        // Показываем сообщение об успехе через Telegram UI
-        tg.showPopup({
-            title: 'Success!',
-            message: 'Event created successfully',
-            buttons: [{ type: 'ok' }]
-        });
-        
-        // Очищаем форму и возвращаемся к списку событий
         $form[0].reset();
         showView('eventsView');
         
     } catch (error) {
-        // Показываем ошибку через Telegram UI
         console.error('Error creating event:', error);
         tg.showPopup({
-            title: 'Error',
-            message: error.message || 'Failed to create event',
+            title: 'Ошибка',
+            message: error.message || 'Не удалось создать событие',
             buttons: [{ type: 'ok' }]
         });
     } finally {
-        // Возвращаем кнопку в исходное состояние
-        $submitBtn.prop('disabled', false).text('Create Event');
+        $submitBtn.prop('disabled', false).text('Создать');
     }
     
     return false;
 }
 
+
+
+
+
+
+
+
+
+
+
+
 // Показ детальной информации о событии
-// Функция отображения деталей события
-
-
-// Обновленная функция showEventDetails
 async function showEventDetails(eventId) {
-    showView('detailsView');
-    const $details = $('#eventDetails');
-    $details.data('event-id', eventId); // Сохраняем eventId
+    showView('detailsView1');
+    const $details = $('#eventDetails1');
+    $details.data('event-id', eventId);
     $details.html('<div class="loading"></div>');
     
     try {
@@ -157,39 +205,98 @@ async function showEventDetails(eventId) {
         if (!response.ok) throw new Error('Failed to fetch event details');
         const event = await response.json();
         
+        // Формируем ссылку на Яндекс Карты из координат
+        let mapLinkHtml = '';
+        if (event.map_link) {
+            const [lat, lon] = event.map_link.split(',').map(coord => coord.trim());
+            const yandexMapUrl = `https://yandex.ru/maps/?pt=${lon},${lat}&z=17&l=map`;
+            mapLinkHtml = `
+                <p class="mb-2">
+                    
+                    <a href="${yandexMapUrl}" target="_blank" class="btn-outline-primary text-decoration-none">
+                       <strong> <i class="bi bi-geo-alt"></i> Местоположение на карте </strong> 
+                    </a>
+                    
+                </p>`;
+        }
+ 
         // Обновляем HTML с деталями события
         $details.html(`
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h3 class="h4 mb-0">${escapeHtml(event.title)}</h3>
+            
+                <h3 class="h4 mb-4 mt-2">${escapeHtml(event.title)}</h3>
                 
-            </div>
+            
             <div class="container p-2">
-                
-                    <div class="card-body">
-                        <p class="mb-2"><strong>Дата и время:</strong> ${formatDate(event.date)}</p>
-                        <p class="mb-2"><strong>Адрес и ориентир:</strong> ${escapeHtml(event.location)}</p>
-                        ${event.description ? `<p class="mb-4">${escapeHtml(event.description)}</p>` : ''}
-                        
-                        <div class="mb-4 addguestform">
-                            <div class="loading"></div>
-                        </div>
+                <div class="card-body">
+                    <p class="mb-2"><strong>Дата и время:</strong> ${formatDate(event.date)}</p>
+                    <p class="mb-2"><strong>Адрес и ориентир:</strong> ${escapeHtml(event.location)}</p>
+                    ${event.description ? `<p class="mb-4">${escapeHtml(event.description)}</p>` : ''}
+                    ${mapLinkHtml}  <!-- Добавляем ссылку на карту -->
+                    
+                    <div class="mb-4 addguestform">
+                        <div class="loading"></div>
                     </div>
-                
+                </div>
             </div>
         `);
-
+ 
         // Загружаем гостей отдельным запросом
         loadGuests(eventId);
-
+ 
     } catch (error) {
         console.error('Error loading event details:', error);
         $details.html(`
             <div class="text-danger py-4 text-center">
-                <p>Failed to load event details</p>
+                <p>Не удалось загрузить детали события</p>
                 <button onclick="showView('eventsView')" class="tg-button">
-                    Back to Events
+                    Вернуться к списку
                 </button>
             </div>
         `);
     }
+ }
+
+
+
+
+// Функция удаления события
+async function deleteEvent(eventId, e) {
+    e.stopPropagation(); // Предотвращаем открытие деталей события
+
+    // Показываем подтверждение через Telegram UI
+    tg.showPopup({
+        title: 'Подтверждение',
+        message: 'Вы уверены, что хотите удалить это событие?',
+        buttons: [
+            { id: 'delete', type: 'destructive', text: 'Удалить' },
+            { id: 'cancel', type: 'cancel', text: 'Отмена' }
+        ]
+    }, async (buttonId) => {
+        if (buttonId === 'delete') {
+            try {
+                const response = await fetch(`/api/events/${eventId}/`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-Telegram-Init-Data': tg.initData
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to delete event');
+                }
+
+            
+
+                // Перезагружаем список событий
+                loadEvents();
+            } catch (error) {
+                console.error('Error deleting event:', error);
+                tg.showPopup({
+                    title: 'Ошибка',
+                    message: 'Не удалось удалить событие',
+                    buttons: [{ type: 'ok' }]
+                });
+            }
+        }
+    });
 }
