@@ -264,11 +264,10 @@ function showInvitation(invitation) {
         
                 const formattedDate = formatDateUz(invitation.event.date);
                 
-                let mapLinkHtml = '';
+                let yandexMapUrl = '';
                 if (invitation.event.map_link) {
                     const [lat, lon] = invitation.event.map_link.split(',').map(coord => coord.trim());
-                    const yandexMapUrl = `https://yandex.ru/maps/?pt=${lon},${lat}&z=17&l=map`;
-            
+                    yandexMapUrl = `https://yandex.ru/maps/?pt=${lon},${lat}&z=17&l=map`;
                 }
 
 
