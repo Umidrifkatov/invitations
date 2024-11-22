@@ -263,7 +263,17 @@ function showInvitation(invitation) {
                 const textShadowStyle = `text-shadow: 1px 1px 1px rgba(255,255,255,0.5);`;
         
                 const formattedDate = formatDateUz(invitation.event.date);
-        
+                
+                let mapLinkHtml = '';
+                if (invitation.event.map_link) {
+                    const [lat, lon] = invitation.event.map_link.split(',').map(coord => coord.trim());
+                    const yandexMapUrl = `https://yandex.ru/maps/?pt=${lon},${lat}&z=17&l=map`;
+            
+                }
+
+
+
+
                 return `
                     <div style="${backgroundStyle}" class="px-4">
                         <div class="text-center pt-5">
@@ -301,8 +311,13 @@ function showInvitation(invitation) {
                                         </p>
                                     </div>
                                 </div>
+
+
+                                
+
+
                                 <div class="mt-4 text-center ">
-                                    <a class="btn btn-outline-light btn-lg w-100" href="${invitation.event.map_link}" target="_blank">
+                                    <a class="btn btn-outline-light btn-lg w-100" href="${yandexMapUrl}" target="_blank">
                                         <i class="bi bi-geo-alt"></i> Xaritada manzilni ko‘rish
                                     </a>
                                 </div>
